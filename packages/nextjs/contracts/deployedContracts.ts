@@ -504,6 +504,171 @@ const deployedContracts = {
         transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
       },
     },
+    KNN: {
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "contract DataLayer",
+              name: "_dataLayer",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "schemaName",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "row",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint64",
+              name: "k",
+              type: "uint64",
+            },
+          ],
+          name: "getKNN",
+          outputs: [
+            {
+              internalType: "uint256[][]",
+              name: "",
+              type: "uint256[][]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256[][]",
+              name: "analyticsData",
+              type: "uint256[][]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "row",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint64",
+              name: "k",
+              type: "uint64",
+            },
+          ],
+          name: "getKNNOffChainData",
+          outputs: [
+            {
+              internalType: "uint256[][]",
+              name: "",
+              type: "uint256[][]",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "userAddress",
+              type: "address",
+            },
+            {
+              internalType: "uint64",
+              name: "k",
+              type: "uint64",
+            },
+          ],
+          name: "getRecommendedSimilarUsers",
+          outputs: [
+            {
+              internalType: "address[][]",
+              name: "",
+              type: "address[][]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "userIndex",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256[][]",
+              name: "similarityMatrix",
+              type: "uint256[][]",
+            },
+            {
+              internalType: "uint64",
+              name: "k",
+              type: "uint64",
+            },
+          ],
+          name: "recommend",
+          outputs: [
+            {
+              internalType: "address[][]",
+              name: "",
+              type: "address[][]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalCategories",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "userActivityMatrix",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
   },
 } as const;
 

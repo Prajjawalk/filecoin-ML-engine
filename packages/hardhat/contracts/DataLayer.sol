@@ -40,11 +40,6 @@ contract DataLayer is Ownable {
 		mapping(bytes32 => uint256) columnToIndex;
 	}
 
-	struct similarityPair {
-		uint256 index;
-		uint256 similarity;
-	}
-
 	Analytics[] public dappAnalytics;
 
 	constructor() Ownable() {
