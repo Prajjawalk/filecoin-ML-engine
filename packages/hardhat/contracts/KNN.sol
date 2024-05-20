@@ -36,7 +36,7 @@ contract KNN {
     return predictions;
   }
 
-  // Get KNN of any schema row
+  // Get KNN of offchain data
   function getKNNOffChainData(uint256[][] memory analyticsData, uint256[] memory row, uint64 k, Distance distance) external pure returns(uint256[][] memory) {
 
     uint256[] memory similarityArray = computeSimilarityArray(analyticsData, row, distance);
