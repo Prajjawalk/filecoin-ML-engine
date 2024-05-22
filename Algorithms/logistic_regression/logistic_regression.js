@@ -93,4 +93,5 @@ class LogisticRegression {
         return predictions;
     }
 }
+
 module.exports = LogisticRegression;
