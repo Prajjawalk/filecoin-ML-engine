@@ -3,12 +3,12 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { Contract } from "ethers";
 
 /**
- * Deploys a contract named "AnomalyDetection" using the deployer account and
+ * Deploys a contract named "LinearRegression" using the deployer account and
  * constructor arguments set to the deployer address
  *
  * @param hre HardhatRuntimeEnvironment object.
  */
-const deployAnomalyDetection: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployLinearRegression: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   /*
     On localhost, the deployer account is the one that comes with Hardhat, which is already funded.
 
@@ -24,7 +24,7 @@ const deployAnomalyDetection: DeployFunction = async function (hre: HardhatRunti
 
   const DataLayer = await hre.ethers.getContract<Contract>("DataLayer", deployer);
 
-  await deploy("AnomalyDetection", {
+  await deploy("LinearRegression", {
     from: deployer,
     // Contract constructor arguments
     args: [await DataLayer.getAddress()],
@@ -35,8 +35,8 @@ const deployAnomalyDetection: DeployFunction = async function (hre: HardhatRunti
   });
 };
 
-export default deployAnomalyDetection;
+export default deployLinearRegression;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployAnomalyDetection.tags = ["AnomalyDetection"];
+deployLinearRegression.tags = ["LinearRegression"];

@@ -3,17 +3,17 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import "./DataLayer.sol";
 
-contract LogisticRegression {
+contract LinearRegression {
 	DataLayer dataLayer;
 
-	int256 constant FIXED_POINT = 1e18; // Scaling factor for fixed-point arithmetic
+	int256 constant FIXED_POINT = 1e9; // Scaling factor for fixed-point arithmetic
 
 	constructor(DataLayer _dataLayer) {
 		dataLayer = _dataLayer;
 	}
 
   // Get linear regression for onchain schema data
-	function getLogisticRegression(
+	function getLinearRegression(
 		bytes32 schemaName,
     uint256[] memory trainingColIndices,
 		uint256 labelColIndex,
@@ -46,12 +46,13 @@ contract LogisticRegression {
 			bias
 		);
 
-		int256[] memory predictions = predict(testData, weights, bias);
+		int256[] memory predictions = predict(testData, bias, weights);
 
 		return predictions;
 	}
 
-	function getLogisticRegressionOffChainData(
+  // Get linear regression for offchain data
+  function getLinearRegressionOffChainData(
 		int256[][] memory analyticsData,
 		int256[] memory labels,
 		int256[][] memory testData,
@@ -59,6 +60,8 @@ contract LogisticRegression {
 		uint256 iterations,
 		int256 bias
 	) public pure returns (int256[] memory) {
+		
+
 		int256[] memory weights = fit(
 			analyticsData,
 			labels,
@@ -67,13 +70,14 @@ contract LogisticRegression {
 			bias
 		);
 
-		int256[] memory predictions = predict(testData, weights, bias);
+		int256[] memory predictions = predict(testData, bias, weights);
 
 		return predictions;
 	}
 
+
 	/**
-	 * Fits the logistic regression model to the training data
+	 * Fits the linear regression model to the training data
 	 * @param X - The training features.
 	 * @param y - The training labels.
 	 */
@@ -91,36 +95,36 @@ contract LogisticRegression {
 
 		// Initialize weights
 		int256[] memory weights = new int256[](X[0].length);
-
+  
 		for (uint256 iter = 0; iter < iterations; iter++) {
-			int256[] memory linearModel = new int256[](X.length);
 			int256[] memory predictions = new int256[](X.length);
 			int256[] memory dw = new int256[](X[0].length);
 			int256 db = 0;
 
-			// Compute linear model and predictions
-			for (uint256 i = 0; i < X.length; i++) {
-				linearModel[i] = bias;
+			// Compute predictions
+			for (uint256 i = 1; i < X.length; i++) {
+				int256 linearModel = bias;
 				for (uint256 j = 0; j < X[0].length; j++) {
-					linearModel[i] += (weights[j] * X[i][j]) / FIXED_POINT;
+					linearModel += (weights[j] * X[i][j]) / FIXED_POINT;
 				}
-				predictions[i] = sigmoid(linearModel[i]);
+				predictions[i] = linearModel;
 			}
 
 			// Compute gradients
-			for (uint256 i = 0; i < X.length; i++) {
+			for (uint256 i = 1; i < X.length; i++) {
 				int256 error = predictions[i] - y[i];
 				for (uint256 j = 0; j < X[0].length; j++) {
-					dw[j] += (X[i][j] * error) / FIXED_POINT;
+					dw[j] += (X[i][j] * error) / (int256(X.length) * FIXED_POINT);
 				}
-				db += error;
+        
+				db += error / int256(X.length);
 			}
 
 			// Update weights and bias
 			for (uint256 j = 0; j < X[0].length; j++) {
-				weights[j] -= (learningRate * dw[j]) / int256(X.length);
+				weights[j] -= (learningRate * dw[j]) / FIXED_POINT;
 			}
-			bias -= (learningRate * db) / int256(X.length);
+			bias -= (learningRate * db) / FIXED_POINT;
 		}
 
 		return weights;
@@ -132,8 +136,8 @@ contract LogisticRegression {
 	 */
 	function predict(
 		int256[][] memory X,
-		int256[] memory weights,
-		int256 bias
+		int256 bias,
+		int256[] memory weights
 	) public pure returns (int256[] memory) {
 		uint256 m = X.length;
 		int256[] memory predictions = new int256[](m);
@@ -143,34 +147,9 @@ contract LogisticRegression {
 			for (uint256 j = 0; j < X[0].length; j++) {
 				linearModel += (weights[j] * X[i][j]) / FIXED_POINT;
 			}
-			predictions[i] = sigmoid(linearModel) >= (FIXED_POINT / int256(2))
-				? int256(1)
-				: int256(0);
+			predictions[i] = linearModel;
 		}
 
 		return predictions;
-	}
-
-	/**
-	 * Sigmoid function
-	 * @param z - The input value.
-	 */
-	function sigmoid(int256 z) internal pure returns (int256) {
-		int256 expValue = exp(z);
-		return expValue / (FIXED_POINT + expValue);
-	}
-
-	/**
-	 * Exponential function approximation
-	 * @param x - The input value.
-	 */
-	function exp(int256 x) internal pure returns (int256) {
-		int256 sum = FIXED_POINT;
-		int256 term = FIXED_POINT;
-		for (int256 i = 1; i < 30; i++) {
-			term = (term * x) / int256(i * FIXED_POINT);
-			sum += term;
-		}
-		return sum;
 	}
 }

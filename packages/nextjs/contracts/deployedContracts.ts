@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     AnomalyDetection: {
-      address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
       abi: [
         {
           inputs: [
@@ -570,7 +570,7 @@ const deployedContracts = {
       },
     },
     KNN: {
-      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       abi: [
         {
           inputs: [
@@ -739,6 +739,362 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    LinearRegression: {
+      address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "contract DataLayer",
+              name: "_dataLayer",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [
+            {
+              internalType: "int256[][]",
+              name: "X",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256[]",
+              name: "y",
+              type: "int256[]",
+            },
+            {
+              internalType: "int256",
+              name: "learningRate",
+              type: "int256",
+            },
+            {
+              internalType: "uint256",
+              name: "iterations",
+              type: "uint256",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "fit",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "schemaName",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "trainingColIndices",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint256",
+              name: "labelColIndex",
+              type: "uint256",
+            },
+            {
+              internalType: "int256[][]",
+              name: "testData",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256",
+              name: "learningRate",
+              type: "int256",
+            },
+            {
+              internalType: "uint256",
+              name: "iterations",
+              type: "uint256",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "getLinearRegression",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "int256[][]",
+              name: "analyticsData",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256[]",
+              name: "labels",
+              type: "int256[]",
+            },
+            {
+              internalType: "int256[][]",
+              name: "testData",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256",
+              name: "learningRate",
+              type: "int256",
+            },
+            {
+              internalType: "uint256",
+              name: "iterations",
+              type: "uint256",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "getLinearRegressionOffChainData",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "int256[][]",
+              name: "X",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+            {
+              internalType: "int256[]",
+              name: "weights",
+              type: "int256[]",
+            },
+          ],
+          name: "predict",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    LogisticRegression: {
+      address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "contract DataLayer",
+              name: "_dataLayer",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [
+            {
+              internalType: "int256[][]",
+              name: "X",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256[]",
+              name: "y",
+              type: "int256[]",
+            },
+            {
+              internalType: "int256",
+              name: "learningRate",
+              type: "int256",
+            },
+            {
+              internalType: "uint256",
+              name: "iterations",
+              type: "uint256",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "fit",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "schemaName",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "trainingColIndices",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint256",
+              name: "labelColIndex",
+              type: "uint256",
+            },
+            {
+              internalType: "int256[][]",
+              name: "testData",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256",
+              name: "learningRate",
+              type: "int256",
+            },
+            {
+              internalType: "uint256",
+              name: "iterations",
+              type: "uint256",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "getLogisticRegression",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "int256[][]",
+              name: "analyticsData",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256[]",
+              name: "labels",
+              type: "int256[]",
+            },
+            {
+              internalType: "int256[][]",
+              name: "testData",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256",
+              name: "learningRate",
+              type: "int256",
+            },
+            {
+              internalType: "uint256",
+              name: "iterations",
+              type: "uint256",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "getLogisticRegressionOffChainData",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "int256[][]",
+              name: "X",
+              type: "int256[][]",
+            },
+            {
+              internalType: "int256[]",
+              name: "weights",
+              type: "int256[]",
+            },
+            {
+              internalType: "int256",
+              name: "bias",
+              type: "int256",
+            },
+          ],
+          name: "predict",
+          outputs: [
+            {
+              internalType: "int256[]",
+              name: "",
+              type: "int256[]",
+            },
+          ],
+          stateMutability: "pure",
           type: "function",
         },
       ],
