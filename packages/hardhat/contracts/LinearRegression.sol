@@ -31,10 +31,10 @@ contract LinearRegression {
 
 		for (uint256 i = 1; i < analyticsData.length; i++) {
       trainingData[i] = new int256[](trainingColIndices.length);
-			labels[i] = int256(analyticsData[i][labelColIndex]);
+			labels[i] = int256(analyticsData[i][labelColIndex]) * FIXED_POINT;
 
       for (uint256 j = 0; j < trainingColIndices.length; j++) {
-        trainingData[i][j] = int256(analyticsData[i][trainingColIndices[j]]);
+        trainingData[i][j] = int256(analyticsData[i][trainingColIndices[j]]) * FIXED_POINT;
       }
 		}
 

@@ -6,7 +6,7 @@ import "./DataLayer.sol";
 contract LogisticRegression {
 	DataLayer dataLayer;
 
-	int256 constant FIXED_POINT = 1e18; // Scaling factor for fixed-point arithmetic
+	int256 constant FIXED_POINT = 1e9; // Scaling factor for fixed-point arithmetic
 
 	constructor(DataLayer _dataLayer) {
 		dataLayer = _dataLayer;
@@ -31,10 +31,10 @@ contract LogisticRegression {
 
 		for (uint256 i = 1; i < analyticsData.length; i++) {
       trainingData[i] = new int256[](trainingColIndices.length);
-			labels[i] = int256(analyticsData[i][labelColIndex]);
+			labels[i] = int256(analyticsData[i][labelColIndex]) * FIXED_POINT;
 
       for (uint256 j = 0; j < trainingColIndices.length; j++) {
-        trainingData[i][j] = int256(analyticsData[i][trainingColIndices[j]]);
+        trainingData[i][j] = int256(analyticsData[i][trainingColIndices[j]]) * FIXED_POINT;
       }
 		}
 
@@ -99,7 +99,7 @@ contract LogisticRegression {
 			int256 db = 0;
 
 			// Compute linear model and predictions
-			for (uint256 i = 0; i < X.length; i++) {
+			for (uint256 i = 1; i < X.length; i++) {
 				linearModel[i] = bias;
 				for (uint256 j = 0; j < X[0].length; j++) {
 					linearModel[i] += (weights[j] * X[i][j]) / FIXED_POINT;
@@ -108,7 +108,7 @@ contract LogisticRegression {
 			}
 
 			// Compute gradients
-			for (uint256 i = 0; i < X.length; i++) {
+			for (uint256 i = 1; i < X.length; i++) {
 				int256 error = predictions[i] - y[i];
 				for (uint256 j = 0; j < X[0].length; j++) {
 					dw[j] += (X[i][j] * error) / FIXED_POINT;
@@ -118,9 +118,9 @@ contract LogisticRegression {
 
 			// Update weights and bias
 			for (uint256 j = 0; j < X[0].length; j++) {
-				weights[j] -= (learningRate * dw[j]) / int256(X.length);
+				weights[j] -= (learningRate * dw[j]) / (int256(X.length) * FIXED_POINT);
 			}
-			bias -= (learningRate * db) / int256(X.length);
+			bias -= (learningRate * db) / (int256(X.length) * FIXED_POINT);
 		}
 
 		return weights;
@@ -143,8 +143,8 @@ contract LogisticRegression {
 			for (uint256 j = 0; j < X[0].length; j++) {
 				linearModel += (weights[j] * X[i][j]) / FIXED_POINT;
 			}
-			predictions[i] = sigmoid(linearModel) >= (FIXED_POINT / int256(2))
-				? int256(1)
+			predictions[i] = sigmoid(linearModel) > (FIXED_POINT / int256(2))
+				? int256(1 * FIXED_POINT)
 				: int256(0);
 		}
 
@@ -157,7 +157,7 @@ contract LogisticRegression {
 	 */
 	function sigmoid(int256 z) internal pure returns (int256) {
 		int256 expValue = exp(z);
-		return expValue / (FIXED_POINT + expValue);
+		return (expValue * FIXED_POINT) / (FIXED_POINT + expValue);
 	}
 
 	/**
