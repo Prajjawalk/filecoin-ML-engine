@@ -30,8 +30,8 @@ const Home: NextPage = () => {
     const getSchemas = async () => {
       try {
         const userAnalyticsContractData = getContract({
-          abi: deployedContracts[31337].DataLayer.abi as Abi,
-          address: deployedContracts[31337].DataLayer.address,
+          abi: deployedContracts[314159].DataLayer.abi as Abi,
+          address: deployedContracts[314159].DataLayer.address,
           client: { public: publicClient, wallet: walletClient },
         });
         setOdl(userAnalyticsContractData);
@@ -53,8 +53,8 @@ const Home: NextPage = () => {
       <div className="flex items-center flex-col flex-grow pt-10">
         <div className="px-5">
           <h1 className="text-center">
-            <span className="block text-4xl font-bold heading">Open Data Library (ODL)</span>
-            <span className="block text-2xl mb-2 des">Dashboard</span>
+            <span className="block text-4xl font-bold heading">Filecoin ML Engine</span>
+            <span className="block text-2xl mb-2 des">Data Aggregation Layer</span>
             <div className="padding"></div>
           </h1>
         </div>

@@ -38,8 +38,8 @@ const AddressPage = ({ params }: PageProps) => {
     const getSchemaData = async () => {
       try {
         const userAnalyticsContractData = getContract({
-          abi: deployedContracts[31337].DataLayer.abi as Abi,
-          address: deployedContracts[31337].DataLayer.address,
+          abi: deployedContracts[314159].DataLayer.abi as Abi,
+          address: deployedContracts[314159].DataLayer.address,
           client: { public: publicClient },
         });
 

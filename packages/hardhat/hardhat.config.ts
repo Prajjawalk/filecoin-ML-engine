@@ -119,6 +119,16 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.publicgoods.network",
       accounts: [deployerPrivateKey],
     },
+    calibrationnet: {
+      chainId: 314159,
+      url: "https://api.calibration.node.glif.io/rpc/v1",
+      accounts: [deployerPrivateKey],
+    },
+    filecoinmainnet: {
+      chainId: 314,
+      url: "https://api.node.glif.io",
+      accounts: [deployerPrivateKey],
+    },
   },
   // configuration for harhdat-verify plugin
   etherscan: {
