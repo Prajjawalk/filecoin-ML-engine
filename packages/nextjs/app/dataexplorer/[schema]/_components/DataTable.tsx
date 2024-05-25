@@ -35,7 +35,7 @@ export const DataTable = ({ schema }: DataTableProps) => {
 
           dataTuple.push([idx, ...d]);
         });
-        console.log(dataTuple);
+
         setData(dataTuple);
       } catch (e) {
         console.log(e);
