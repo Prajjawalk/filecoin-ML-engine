@@ -15,7 +15,7 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
   const [k, setK] = useState(0n);
   const [knndist, setKnndist] = useState(0n);
   const [columns, setColumns] = useState<Array<`0x${string}`>>([]);
-  const [col, setCol] = useState<Record<string, bigint | string>>();
+  const [col, setCol] = useState<Record<string, bigint>>();
   const [colTraining, setcolTraining] = useState<Record<string, boolean>>();
   const [colLabel, setColLabel] = useState<`0x${string}`>();
   const [loading, setLoading] = useState(false);
@@ -213,7 +213,7 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
                                 <IntegerInput
                                   name="total columns"
                                   placeholder="0"
-                                  value={String(col?.[i])}
+                                  value={String(col ? col[i] : 0n)}
                                   onChange={(value: any) => {
                                     setCol(cols => ({ ...cols, [i]: value }));
                                   }}
