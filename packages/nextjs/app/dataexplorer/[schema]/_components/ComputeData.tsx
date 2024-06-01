@@ -25,7 +25,10 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
   const [iterations, setIterations] = useState(0n);
   const [testdata, setTestData] = useState("");
   const [threshold, setThreshold] = useState(0n);
+  const [show, setShow] = useState("");
   const [knnPredictions, setKnnPredictions] = useState<bigint[][]>([]);
+  const [anomalyDetections, setAnomalyDetections] = useState<bigint[][]>([]);
+  const [llmInference, setLlmInference] = useState<string>();
 
   useEffect(() => {
     const getSchemaData = async () => {
@@ -74,6 +77,7 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
 
       const predictions = await KNNContract.read.getKNN([schema, row, k, knndist]);
       setKnnPredictions(predictions as bigint[][]);
+      setShow("KNN");
       setErrored(false);
       setLoading(false);
     } catch (e) {
@@ -137,7 +141,8 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
       });
 
       const predictions = await AnomalyDetectionContract.read.getAnomalyDetection([schema, threshold]);
-      console.log(predictions);
+      setAnomalyDetections(predictions as bigint[][]);
+      setShow("AnomalyDetection");
       setErrored(false);
       setLoading(false);
     } catch (e) {
@@ -146,6 +151,56 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
       console.log(e);
     }
   }, [publicClient, schema, threshold]);
+
+  const llmInferenceCall = useCallback(async () => {
+    setExpandModel("LLM Inference");
+    setToggleModel(!toggleModel);
+    try {
+      const userAnalyticsContractData = getContract({
+        abi: deployedContracts[314159].DataLayer.abi as Abi,
+        address: deployedContracts[314159].DataLayer.address,
+        client: { public: publicClient as PublicClient },
+      });
+
+      const data_ = await userAnalyticsContractData.read.getAnalyticsDataBySchemaName([schema]);
+
+      const dataset: unknown[][] = [];
+      (data_ as any).map(async (d: Array<number>, idx: number) => {
+        // const address = await userAnalyticsContractData.read.getSchemaIdToAddress([schema, idx]);
+
+        dataset.push([idx, ...d]);
+      });
+
+      (BigInt.prototype as any).toJSON = function () {
+        return this.toString();
+      };
+
+      const inputCol: Array<string> = [];
+      columns.map((i: any, idx) => {
+        const stringVal = fromHex(i, "string");
+
+        inputCol[idx] = stringVal;
+      });
+
+      const resp = await fetch("/lilypad", {
+        method: "POST",
+        body: JSON.stringify({
+          columns: JSON.stringify(inputCol),
+          data: JSON.stringify(dataset),
+        }),
+      });
+
+      const predictions = await resp.json();
+      setLlmInference(predictions.inference);
+
+      setErrored(false);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      setErrored(true);
+      console.log(e);
+    }
+  }, [columns, publicClient, schema, toggleModel]);
 
   return (
     <>
@@ -485,6 +540,16 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
                     </button>
                   </div>
                 ) : null}
+                <button className="btn btn-secondary btn-sm" onClick={llmInferenceCall}>
+                  Run Inference
+                </button>
+                {expandModel == "LLM Inference" && toggleModel === true && llmInference ? (
+                  <div className="mb-5">
+                    <div className="flex flex-col gap-3 py-5 first:pt-0 last:pb-1">
+                      <p className="font-small my-0 break-words">{llmInference}</p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
@@ -493,8 +558,9 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
           <div className="z-10">
             <div className="adafelbg bg-base-100 rounded-3xl  border-base-300 flex flex-col mt-10 relative">
               <div className="p-5 divide-y divide-base-300 h-screen overflow-scroll">
-                {knnPredictions.length > 0 ? (
+                {knnPredictions.length > 0 && show == "KNN" ? (
                   <div className="overflow-x-auto w-full shadow-2xl rounded-xl">
+                    <p className="font-medium my-0 mb-5 break-words">KNN Predictions</p>
                     <table className="table text-xl bg-base-100 table-zebra w-full md:table-md table-sm">
                       <thead>
                         <tr className="rounded-xl text-sm text-base-content">
@@ -509,6 +575,39 @@ export const ComputeData = ({ schema }: ComputeDataProps) => {
                       </thead>
                       <tbody>
                         {knnPredictions?.map((dpoint: Array<bigint>, idx: number) => (
+                          <>
+                            {idx > 0 ? (
+                              <tr key={idx}>
+                                {dpoint.map((i: bigint) => (
+                                  <>
+                                    <td>{i?.toString()}</td>
+                                  </>
+                                ))}
+                              </tr>
+                            ) : null}
+                          </>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : null}
+                {anomalyDetections.length > 0 && show == "AnomalyDetection" ? (
+                  <div className="overflow-x-auto w-full shadow-2xl rounded-xl">
+                    <p className="font-medium my-0 mb-5 break-words">Anomaly Detections</p>
+                    <table className="table text-xl bg-base-100 table-zebra w-full md:table-md table-sm">
+                      <thead>
+                        <tr className="rounded-xl text-sm text-base-content">
+                          {columns?.map(i => (
+                            <>
+                              <th className="bg-primary" key={i}>
+                                {fromHex(i, "string")}
+                              </th>
+                            </>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {anomalyDetections?.map((dpoint: Array<bigint>, idx: number) => (
                           <>
                             {idx > 0 ? (
                               <tr key={idx}>
